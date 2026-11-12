@@ -1,0 +1,76 @@
+CHAT ROOMS: FIRESTORE RULES (required, or chat will say "permission denied")
+=============================================================================
+
+Firebase Console -> Firestore Database -> Rules.
+Add the block below INSIDE:  match /databases/{database}/documents { ... }
+(next to your existing rules, do not delete them), then press PUBLISH.
+
+    // ---- Chat rooms ----
+    match /chatRooms/{roomId} {
+      // The 6-letter code is the room id. You must know it to open (get) the room.
+      allow get: if request.auth != null;
+      allow list: if false;
+      allow create: if request.auth != null
+                    && request.resource.data.ownerUid == request.auth.uid
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() <= 40;
+      allow update, delete: if false;
+
+      // Members: anyone who knows the code can add THEMSELVES, and can leave.
+      match /members/{uid} {
+        allow read: if request.auth != null
+                    && (request.auth.uid == uid
+                        || exists(/databases/$(database)/documents/chatRooms/$(roomId)/members/$(request.auth.uid)));
+        allow create, update: if request.auth != null
+                    && request.auth.uid == uid
+                    && exists(/databases/$(database)/documents/chatRooms/$(roomId));
+        allow delete: if request.auth != null && request.auth.uid == uid;
+      }
+
+      // Messages: only members can read and write. You can only send as yourself.
+      match /messages/{messageId} {
+        allow read: if request.auth != null
+                    && exists(/databases/$(database)/documents/chatRooms/$(roomId)/members/$(request.auth.uid));
+        allow create: if request.auth != null
+                    && exists(/databases/$(database)/documents/chatRooms/$(roomId)/members/$(request.auth.uid))
+                    && request.resource.data.senderUid == request.auth.uid
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() <= 500;
+        allow update, delete: if false;
+      }
+    }
+
+    // ---- Each user's own list of joined rooms ----
+    // (only needed if your rules do not already allow everything under users/{uid})
+    match /users/{uid}/chatRooms/{roomId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+HOW IT WORKS
+- Create a room: you get a 6-letter code. Tap "Share code" inside the chat to send it.
+- Join a room: My Circle -> Chat rooms -> Join a room with a code.
+- Anyone who has the code can join, so only share it with people you trust.
+- Messages appear live while the app is open.
+
+CHAT NOTIFICATIONS (no server needed, works on the free Spark plan)
+- ChatNotifyService (foreground service) listens to every room you joined and shows a
+  notification when someone else sends a message. No new Firestore rules are needed.
+- Mute: bell icon in the chat header and on each room card (1 hour / 8 hours / 1 week / until
+  turned back on). Saved in users/{uid}/chatRooms/{code}.mutedUntil (covered by the rule above).
+- No notification for your own messages, or for the room you are looking at right now.
+- Limits: it needs the small "ResQ chat is on" notification, and it works only while Android lets
+  the app run. Allow "background / unrestricted battery" for ResQ for the best result.
+  If the phone is force-stopped by the user, alerts resume when ResQ is opened again.
+
+SOS TO CHAT ROOMS
+- Pressing SOS also posts the SOS text (type, name, battery, time, Maps link, tracking code) into every
+  chat room you joined, flagged sos=true. No new rules are needed.
+- Members get a notification even if they muted that room (mute never hides an SOS).
+- Switch it off in Profile: "Also send my SOS to my chat rooms".
+
+SENT / SEEN BY
+- Each message shows "Sending...", "Sent" or "Seen by <names>" under my own bubble. Tap it for Message info
+  (who has seen it, who has not).
+- When you have the chat open, your member document gets lastReadAt = now. Others compare it with each
+  message's time. This uses the members rule above (you may update your own member document), so no
+  new rules are needed.

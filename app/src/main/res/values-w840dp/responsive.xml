@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- At least 840dp wide (large phones sideways, tablets): wider margins, 4-column grid.
+     Android picks the folder by the width the screen has RIGHT NOW, so rotating changes it. -->
+<resources>
+    <dimen name="content_h_padding">120dp</dimen>
+    <dimen name="numbers_h_padding">116dp</dimen>
+    <dimen name="auth_h_padding">124dp</dimen>
+    <dimen name="list_h_padding">104dp</dimen>
+    <dimen name="chat_h_padding">96dp</dimen>
+    <dimen name="header_h_padding">108dp</dimen>
+    <dimen name="item_h_margin">6dp</dimen>
+    <integer name="list_columns">2</integer>
+    <integer name="grid_columns">4</integer>
+</resources>

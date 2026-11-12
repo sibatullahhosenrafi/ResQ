@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tablets: more room, so bigger text and a bigger SOS button -->
+<resources>
+    <dimen name="screen_padding">40dp</dimen>
+    <dimen name="title_text_size">40sp</dimen>
+
+    <dimen name="sos_card_height">330dp</dimen>
+    <dimen name="sos_ring_outer">300dp</dimen>
+    <dimen name="sos_ring_inner">256dp</dimen>
+    <dimen name="sos_button_size">210dp</dimen>
+    <dimen name="sos_wave_size">210dp</dimen>
+    <dimen name="sos_text_size">46sp</dimen>
+</resources>

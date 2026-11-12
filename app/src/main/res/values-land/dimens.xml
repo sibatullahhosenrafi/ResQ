@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Landscape: the screen is short, so everything is a little smaller -->
+<resources>
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="title_text_size">26sp</dimen>
+
+    <dimen name="sos_card_height">200dp</dimen>
+    <dimen name="sos_ring_outer">178dp</dimen>
+    <dimen name="sos_ring_inner">152dp</dimen>
+    <dimen name="sos_button_size">124dp</dimen>
+    <dimen name="sos_wave_size">124dp</dimen>
+    <dimen name="sos_text_size">30sp</dimen>
+</resources>

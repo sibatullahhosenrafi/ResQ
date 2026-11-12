@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Core colours: crimson UI kit look -->
+    <color name="white">#FFFFFF</color>
+    <color name="background_light">#FFF8F8</color>
+
+    <!-- Brand crimson (old names kept so every layout keeps working) -->
+    <color name="sos_orange_start">#E8414F</color>
+    <color name="sos_red_end">#B3122A</color>
+    <color name="brand_dark">#6E0613</color>
+    <color name="brand_primary">#C8202F</color>
+    <color name="brand_light">#F0525F</color>
+
+    <!-- Soft pink surfaces -->
+    <color name="pink_bg">#FDEDEF</color>
+    <color name="pink_card">#FBE0E3</color>
+    <color name="pink_stroke">#F4D3D7</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1F1A1B</color>
+    <color name="text_secondary">#7B6F72</color>
+    <color name="nav_inactive">#A39598</color>
+
+    <color name="icon_bg_gray">#F6E9EA</color>
+
+    <!-- Feature colours (home screen tiles + type chips) -->
+    <color name="tile_hospital_bg">#E3F0FF</color>
+    <color name="tile_hospital_fg">#1565C0</color>
+    <color name="tile_fire_bg">#FDE7E7</color>
+    <color name="tile_fire_fg">#D32F2F</color>
+    <color name="tile_accident_bg">#FFF1DC</color>
+    <color name="tile_accident_fg">#E67700</color>
+    <color name="tile_help_bg">#FDE4EE</color>
+    <color name="tile_help_fg">#C2185B</color>
+    <color name="tile_sir_on_bg">#C8202F</color>
+    <color name="tile_sir_on_fg">#FFFFFF</color>
+    <color name="tile_sir_off_bg">#ECEFF1</color>
+    <color name="tile_sir_off_fg">#546E7A</color>
+    <color name="tile_disaster_fg">#5E35B1</color>
+
+    <!-- Dark-mode support. Day values below equal the colours that were hard-coded before,
+         so the light theme looks exactly the same. values-night/colors.xml overrides them. -->
+    <color name="surface">#FFFFFF</color>              <!-- cards, rows, input boxes, bars -->
+    <color name="accent_text">#B3122A</color>          <!-- red text / icons (was sos_red_end) -->
+    <color name="brand_accent">#C8202F</color>         <!-- crimson text / outlines / tints (was brand_primary) -->
+    <color name="input_border">#E3BCC1</color>
+    <color name="on_brand_soft">#FBE0E3</color>        <!-- small text on a crimson bubble -->
+
+    <!-- Home-screen widget: it has a fixed light look, so it must not follow dark mode -->
+    <color name="widget_text_primary">#1F1A1B</color>
+    <color name="widget_text_secondary">#7B6F72</color>
+</resources>

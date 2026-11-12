@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Added for Foreground Service & Android 14 compatibility -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <!-- Chat notifications: foreground service, restart after reboot, ask to skip battery saver -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
+
+    <application
+        android:name=".ResQApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ResQ">
+
+        <!-- Login is now the first screen of the app -->
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".RegisterActivity" />
+
+        <activity
+            android:name=".ProfileActivity"
+            android:label="My Profile" />
+
+        <activity
+            android:name=".KpiActivity"
+            android:label="My Preparedness" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".FirstAidActivity"
+            android:label="@string/first_aid" />
+
+        <activity
+            android:name=".TrackActivity"
+            android:label="Track a friend" />
+
+        <!-- Appears in the Share menu of Google Maps ("Share -> ResQ") -->
+        <activity
+            android:name=".AddHospitalActivity"
+            android:exported="true"
+            android:label="Add hospital to ResQ">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".HospitalsActivity"
+            android:label="Nearby Hospitals" />
+
+        <activity
+            android:name=".DonorsActivity"
+            android:label="Blood Donors" />
+
+        <activity
+            android:name=".DonorRegisterActivity"
+            android:label="Register as Donor" />
+
+        <activity
+            android:name=".CircleActivity"
+            android:label="My Circle" />
+
+        <activity
+            android:name=".ChatRoomsActivity"
+            android:label="Chat rooms" />
+
+        <activity
+            android:name=".ChatActivity"
+            android:label="Chat"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".EmergencyContactActivity"
+            android:label="Emergency Contact" />
+
+        <activity
+            android:name=".EmergencyNumbersActivity"
+            android:label="Emergency Numbers" />
+
+        <!-- Receives the SMS sent / delivered results and shows notifications -->
+        <receiver
+            android:name=".SmsResultReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.example.resq.SMS_SENT" />
+                <action android:name="com.example.resq.SMS_DELIVERED" />
+                <action android:name="com.example.resq.SOS_TIMEOUT" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Chat notifications without a server (listens to your rooms) -->
+        <service
+            android:name=".ChatNotifyService"
+            android:exported="false"
+            android:foregroundServiceType="remoteMessaging" />
+
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Live location sharing (Step 5) -->
+        <service
+            android:name=".LocationShareService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
+        <!-- Home-screen widget: ResQ Safety Panel -->
+        <receiver
+            android:name=".ResQWidget"
+            android:exported="false"
+            android:label="ResQ Safety Panel">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/resq_widget_info" />
+        </receiver>
+
+        <!-- Invisible helper for the widget's Hospital tile -->
+        <activity
+            android:name=".WidgetHospitalActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- Updated to include foregroundServiceType for Android 14 -->
+        <service
+            android:name=".SirenService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback"
+            android:stopWithTask="true" />
+
+        <!-- Lets the camera app save the photo into our cache folder (profile picture) -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+</manifest>

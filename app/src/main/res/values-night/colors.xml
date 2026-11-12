@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark mode: warm near-black with crimson accents (same family as the light theme) -->
+    <color name="background_light">#140F10</color>
+    <color name="surface">#201718</color>
+
+    <color name="pink_bg">#2B1B1E</color>
+    <color name="pink_card">#3A2428</color>
+    <color name="pink_stroke">#4A2E33</color>
+
+    <color name="text_primary">#F6EDED</color>
+    <color name="text_secondary">#BBAAAD</color>
+    <color name="nav_inactive">#8F8083</color>
+    <color name="icon_bg_gray">#2A2021</color>
+
+    <color name="accent_text">#FF7A86</color>
+    <color name="brand_accent">#FF6573</color>
+    <color name="input_border">#5C3B41</color>
+
+    <!-- Home tiles: deep tinted backgrounds, light foregrounds -->
+    <color name="tile_hospital_bg">#16293F</color>
+    <color name="tile_hospital_fg">#6DB3FF</color>
+    <color name="tile_fire_bg">#3B1D20</color>
+    <color name="tile_fire_fg">#FF7B7B</color>
+    <color name="tile_accident_bg">#3A2A12</color>
+    <color name="tile_accident_fg">#FFB04D</color>
+    <color name="tile_help_bg">#3B1B2B</color>
+    <color name="tile_help_fg">#FF8DBA</color>
+    <color name="tile_sir_off_bg">#263238</color>
+    <color name="tile_sir_off_fg">#B0BEC5</color>
+    <color name="tile_disaster_fg">#B8A2E8</color>
+</resources>

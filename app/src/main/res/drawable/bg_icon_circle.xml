@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Soft round background for icon buttons (back button), with a touch ripple -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#33B3122A">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/pink_bg" />
+        </shape>
+    </item>
+</ripple>

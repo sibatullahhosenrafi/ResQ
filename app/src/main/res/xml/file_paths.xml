@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- temporary camera photos (deleted right after they are turned into text) -->
+    <cache-path name="photos" path="photos/" />
+</paths>

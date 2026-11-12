@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- LANDSCAPE Home screen: two columns.
+     Left  = location, title, emergency type, big SOS button
+     Right = the emergency category tiles (2 columns)
+     Every view keeps the same id as the portrait layout, so MainActivity's View Binding works unchanged. -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:padding="@dimen/screen_padding">
+
+            <!-- LEFT column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvLocation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Current location\nSearching..."
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp" />
+
+                    <!-- One-tap light / dark mode -->
+                    <com.example.resq.ThemeToggleView
+                        android:id="@+id/themeToggle"
+                        android:layout_width="64dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="-8dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Are you in an\nemergency?"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/title_text_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Press the SOS button, your live location will be shared with your emergency contacts."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSharing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/pink_bg"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/tvShareInfo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/btnCopyCode"
+                        style="@style/Widget.ResQ.Button.Outlined"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="Copy code" />
+
+                    <Button
+                        android:id="@+id/btnStopShare"
+                        style="@style/Widget.ResQ.Button.Outlined"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Stop" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+                <LinearLayout
+                android:id="@+id/typeBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Emergency type (optional)"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:scrollbars="none">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:selectionRequired="false"
+                        app:singleLine="true"
+                        app:singleSelection="true">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipMedical"
+                            app:chipIcon="@drawable/ic_hospital"
+                            app:chipIconTint="@color/chip_icon_medical"
+                            style="@style/Widget.ResQ.Chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Medical" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipFire"
+                            app:chipIcon="@drawable/ic_fire"
+                            app:chipIconTint="@color/chip_icon_fire"
+                            style="@style/Widget.ResQ.Chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Fire" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipAccident"
+                            app:chipIcon="@drawable/ic_car_crash"
+                            app:chipIconTint="@color/chip_icon_accident"
+                            style="@style/Widget.ResQ.Chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Accident" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipDisaster"
+                            app:chipIcon="@drawable/ic_disaster"
+                            app:chipIconTint="@color/chip_icon_disaster"
+                            style="@style/Widget.ResQ.Chip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Disaster" />
+                    </com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
+            </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSos"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sos_card_height"
+                android:layout_marginTop="20dp"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="0dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardUseCompatPadding="false"
+                app:strokeWidth="0dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false">
+
+                    <!-- tap wave (animated from MainActivity) -->
+                    <View
+                        android:id="@+id/sosWave1"
+                        android:layout_width="@dimen/sos_wave_size"
+                        android:layout_height="@dimen/sos_wave_size"
+                        android:layout_gravity="center"
+                        android:alpha="0"
+                        android:background="@drawable/bg_sos_wave" />
+
+                    <View
+                        android:id="@+id/sosWave2"
+                        android:layout_width="@dimen/sos_wave_size"
+                        android:layout_height="@dimen/sos_wave_size"
+                        android:layout_gravity="center"
+                        android:alpha="0"
+                        android:background="@drawable/bg_sos_wave" />
+
+                    <!-- soft pulse rings behind the button -->
+                    <View
+                        android:layout_width="@dimen/sos_ring_outer"
+                        android:layout_height="@dimen/sos_ring_outer"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_sos_ring_outer" />
+
+                    <View
+                        android:layout_width="@dimen/sos_ring_inner"
+                        android:layout_height="@dimen/sos_ring_inner"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_sos_ring_inner" />
+
+                    <!-- The circular SOS button -->
+                    <Button
+                        android:id="@+id/btnSos"
+                        android:layout_width="@dimen/sos_button_size"
+                        android:layout_height="@dimen/sos_button_size"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_sos_gradient"
+                        android:text="SOS"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sos_text_size"
+                        android:textStyle="bold"
+                        app:backgroundTint="@null" />
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- RIGHT column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvCategoryTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="What's your emergency?"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <GridLayout
+                    android:id="@+id/gridCategories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:columnCount="2"
+                    android:rowCount="3">
+
+                    <Button
+                    android:id="@+id/btnHospitals"
+                    style="@style/Widget.ResQ.Tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:text="Nearest Hospital"
+                    android:textColor="@color/tile_hospital_fg"
+                    app:backgroundTint="@color/tile_hospital_bg"
+                    app:icon="@drawable/ic_local_hospital"
+                    app:iconTint="@color/tile_hospital_fg" />
+
+                <Button
+                    android:id="@+id/btnCall"
+                    style="@style/Widget.ResQ.Tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:text="Fire (999)"
+                    android:textColor="@color/tile_fire_fg"
+                    app:backgroundTint="@color/tile_fire_bg"
+                    app:icon="@drawable/ic_fire"
+                    app:iconTint="@color/tile_fire_fg" />
+
+                <Button
+                    android:id="@+id/btnFirstAid"
+                    style="@style/Widget.ResQ.Tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:text="Accident"
+                    android:textColor="@color/tile_accident_fg"
+                    app:backgroundTint="@color/tile_accident_bg"
+                    app:icon="@drawable/ic_car_crash"
+                    app:iconTint="@color/tile_accident_fg" />
+
+                <Button
+                    android:id="@+id/btnNumbers"
+                    style="@style/Widget.ResQ.Tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:text="Helplines"
+                    android:textColor="@color/tile_help_fg"
+                    app:backgroundTint="@color/tile_help_bg"
+                    app:icon="@drawable/ic_helpline"
+                    app:iconTint="@color/tile_help_fg" />
+
+                <Button
+                    android:id="@+id/btnSiren"
+                    style="@style/Widget.ResQ.Tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:text="Siren ON"
+                    android:textColor="@color/tile_sir_on_fg"
+                    app:backgroundTint="@color/tile_sir_on_bg"
+                    app:icon="@drawable/ic_siren_on"
+                    app:iconTint="@color/tile_sir_on_fg" />
+
+                <Button
+                    android:id="@+id/btnStopSiren"
+                    style="@style/Widget.ResQ.Tile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:text="Siren OFF"
+                    android:textColor="@color/tile_sir_off_fg"
+                    app:backgroundTint="@color/tile_sir_off_bg"
+                    app:icon="@drawable/ic_siren_off"
+                    app:iconTint="@color/tile_sir_off_fg" />
+                </GridLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_bottom_nav"
+        app:elevation="8dp"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

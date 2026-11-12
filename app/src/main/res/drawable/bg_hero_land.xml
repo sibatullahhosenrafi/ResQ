@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Same crimson hero as bg_hero, but rounded on the RIGHT side (used in landscape login / register) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient android:angle="315" android:startColor="@color/brand_dark" android:endColor="@color/brand_light" android:type="linear" />
+    <corners android:topRightRadius="40dp" android:bottomRightRadius="40dp" />
+</shape>

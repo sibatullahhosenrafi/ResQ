@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Your data (profile, contacts, myHospitals, joined chatRooms ...).
+    // CHANGED: only the write part, to limit the profile picture size (Base64 text).
+    match /users/{uid}/{document=**} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+                            && (!('photoBase64' in request.resource.data)
+                                || request.resource.data.photoBase64.size() < 200000);
+    }
+
+    match /donors/{donorId} {
+      allow read: if request.auth != null;
+      allow create, update: if request.auth != null
+                            && request.auth.uid == donorId
+                            && request.resource.data.uid == request.auth.uid;
+      allow delete: if request.auth != null && request.auth.uid == donorId;
+    }
+
+    match /hospitals/{hospitalId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+    // ---- Chat rooms ----
+    // Normal room: the 6-letter code is the room id.
+    // Blood chat (NEW): id "d_{donorUid}_{requesterUid}", type "donor", only those 2 people.
+    match /chatRooms/{roomId} {
+      allow get: if request.auth != null;
+      // NEW: you can list the blood chats you are part of (query: participants array-contains my uid)
+      allow list: if request.auth != null && request.auth.uid in resource.data.participants;
+      allow create: if request.auth != null
+                    && request.resource.data.ownerUid == request.auth.uid
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() <= 40
+                    && (!('type' in request.resource.data)              // normal code room
+                        || (request.resource.data.type == 'donor'       // NEW: blood chat
+                            && request.resource.data.status == 'pending'
+                            && request.resource.data.participants.size() == 2
+                            && request.resource.data.participants[1] == request.auth.uid
+                            && request.resource.data.participants[0] != request.auth.uid
+                            && roomId == 'd_' + request.resource.data.participants[0] + '_' + request.auth.uid
+                            // only an AVAILABLE donor can be asked
+                            && get(/databases/$(database)/documents/donors/$(request.resource.data.participants[0])).data.available == true));
+      // NEW: the two people may change ONLY "status" (the donor accepts or declines)
+      allow update: if request.auth != null
+                    && ('participants' in resource.data)
+                    && request.auth.uid in resource.data.participants
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+                    && request.resource.data.status in ['pending', 'accepted', 'declined'];
+      allow delete: if false;
+
+      // Members: anyone who knows the code can add THEMSELVES, and can leave.
+      match /members/{uid} {
+        allow read: if request.auth != null
+                    && (request.auth.uid == uid
+                        || exists(/databases/$(database)/documents/chatRooms/$(roomId)/members/$(request.auth.uid)));
+        allow create, update: if request.auth != null
+                    && request.auth.uid == uid
+                    && exists(/databases/$(database)/documents/chatRooms/$(roomId))
+                    // NEW: in a blood chat only its 2 people can join
+                    && (!('participants' in get(/databases/$(database)/documents/chatRooms/$(roomId)).data)
+                        || request.auth.uid in get(/databases/$(database)/documents/chatRooms/$(roomId)).data.participants)
+                    && (!('photo' in request.resource.data)
+                        || request.resource.data.photo.size() < 30000);
+        allow delete: if request.auth != null && request.auth.uid == uid;
+      }
+
+      // Messages: only members can read and write. You can only send as yourself.
+      match /messages/{messageId} {
+        allow read: if request.auth != null
+                    && exists(/databases/$(database)/documents/chatRooms/$(roomId)/members/$(request.auth.uid));
+        allow create: if request.auth != null
+                    && exists(/databases/$(database)/documents/chatRooms/$(roomId)/members/$(request.auth.uid))
+                    && request.resource.data.senderUid == request.auth.uid
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() <= 500;
+        allow update, delete: if false;
+      }
+    }
+
+    // ---- Each user's own list of joined rooms ----
+    match /users/{userId}/chatRooms/{roomId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+  }
+}

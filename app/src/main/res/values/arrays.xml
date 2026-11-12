@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Chat quick messages. Tap a chip = that message is sent to the room at once.
+         The two lists must have the SAME number of items, in the same order. -->
+    <string-array name="chat_quick_labels">
+        <item>Feeling uneasy</item>
+        <item>Being followed</item>
+        <item>Please call me</item>
+        <item>Check on me</item>
+        <item>Need a pick-up</item>
+        <item>I’m lost</item>
+        <item>Battery low</item>
+        <item>Need help now</item>
+        <item>Reached safely</item>
+    </string-array>
+
+    <string-array name="chat_quick_messages">
+        <item>I’m feeling really uneasy walking right now and would love to stay on the phone with you until I get where I’m going.</item>
+        <item>I think someone is following me. Please stay with me and keep an eye on my location.</item>
+        <item>Please call me right now. I’d feel safer talking to someone.</item>
+        <item>I’m on my way. Please check on me in 15 minutes.</item>
+        <item>I need a ride. Can someone please come and pick me up?</item>
+        <item>I’m lost and need help finding my way.</item>
+        <item>My phone battery is low. Please call me soon, while I still have power.</item>
+        <item>I need help right now. Please come to me or call 999.</item>
+        <item>I’ve reached safely. Thank you for staying with me!</item>
+    </string-array>
+</resources>

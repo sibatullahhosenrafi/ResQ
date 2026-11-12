@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ResQ</string>
+    <string name="first_aid">First Aid</string>
+
+    <!-- Home-screen widget (ResQ Safety Panel) -->
+    <string name="widget_description">One-tap SOS, siren, nearest hospital, 999 and first aid</string>
+    <string name="widget_title">ResQ Safety</string>
+    <string name="widget_ready">READY</string>
+    <string name="widget_siren_on_status">SIREN ON</string>
+    <string name="widget_sos">SOS</string>
+    <string name="widget_siren">Siren</string>
+    <string name="widget_stop">Stop</string>
+    <string name="widget_hospital">Hospital</string>
+    <string name="widget_call">Call 999</string>
+    <string name="widget_aid">First aid</string>
+    <string name="widget_sos_desc">SOS: send an alert to your circle</string>
+    <string name="widget_siren_desc">Turn the siren on or off</string>
+    <string name="widget_hospital_desc">Navigate to the nearest hospital</string>
+    <string name="widget_call_desc">Call the national emergency number 999</string>
+    <string name="widget_aid_desc">Open first aid guides</string>
+    <string name="widget_ask_title">ResQ SOS</string>
+</resources>

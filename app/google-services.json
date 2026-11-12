@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "985039194680",
+    "project_id": "resq-83464",
+    "storage_bucket": "resq-83464.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:985039194680:android:f39a150c60e7c50d48b4cd",
+        "android_client_info": {
+          "package_name": "com.example.resq"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmD3gHs0DBedYrAmruKGYKKnzLYFxxD7M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

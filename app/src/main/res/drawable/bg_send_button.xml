@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Round send button in the SOS gradient, with a touch ripple -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#55FFFFFF">
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:angle="45"
+                android:endColor="@color/sos_red_end"
+                android:startColor="@color/sos_orange_start" />
+        </shape>
+    </item>
+</ripple>

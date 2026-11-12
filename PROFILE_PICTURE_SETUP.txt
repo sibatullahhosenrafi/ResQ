@@ -1,0 +1,56 @@
+PROFILE PICTURE (Base64 in Firestore, no Firebase Storage)
+==========================================================
+
+HOW IT WORKS
+- Profile screen -> tap the small camera badge (or the picture) -> dialog "Update Profile Picture":
+  "Take Photo" (camera) or "Choose from Gallery". No permission needed (camera photo goes through a
+  FileProvider into the cache folder and is deleted right after it is converted).
+- AvatarUtil: centre-crop to a square -> 256x256 JPEG (quality 75) -> Base64 String (~15-25 KB).
+- Saved in Firestore:      users/{uid}.photoBase64                 (full picture, 256 px)
+- Also saved on the phone: SharedPreferences "my_photo_b64"        (instant + works offline)
+- Chat: a tiny 96 px copy (~3-6 KB) is written to chatRooms/{code}/members/{uid}.photo
+  (when you join a room and each time you open a chat), so every member sees your picture
+  next to your messages. No picture -> a red circle with your first letter.
+- Log out clears the local copy. Firestore documents can be 1 MB, so 256 px is very safe.
+
+WHAT TO CHANGE IN FIREBASE (step by step)
+1. NOTHING to create. No new collection, no new field setup, no Storage, no billing plan change.
+   Firestore creates the fields photoBase64 / photo by itself the first time they are written.
+2. Rules: if you already have these (you do, from the earlier steps) it works as it is:
+      match /users/{uid}              -> you may read/write your own document
+      match /chatRooms/.../members/{uid} -> you may create/update your own member document
+3. EASY WAY: paste the whole file FIRESTORE_RULES_FULL.rules (it is your own rules + 2 small size-limit changes) and Publish. Or add the 2 limits by hand:
+   Firebase Console -> Firestore Database -> Rules. Inside your  match /users/{uid} { ... }  rule
+   make the write line look like this (keep your own read line):
+
+      allow write: if request.auth != null && request.auth.uid == uid
+                   && (!('photoBase64' in request.resource.data)
+                       || request.resource.data.photoBase64.size() < 200000);
+
+   And in the chat members rule, change the  allow create, update  line to:
+
+      allow create, update: if request.auth != null
+                   && request.auth.uid == uid
+                   && exists(/databases/$(database)/documents/chatRooms/$(roomId))
+                   && (!('photo' in request.resource.data)
+                       || request.resource.data.photo.size() < 30000);
+
+   Then press PUBLISH. (200000 / 30000 are characters; the real pictures are far smaller.)
+4. Test: Profile -> Change photo -> pick a picture -> "Photo saved".
+   Firebase Console -> Firestore -> users -> your uid: you will see photoBase64 (a long text).
+   Open a chat room: your picture appears beside your messages on OTHER people's phones.
+
+FILES CHANGED / ADDED
++ AvatarUtil.java            (new: encode / decode / placeholder / local copy)
++ res/values/avatar_styles.xml (new: round shape)
+~ ProfileActivity.java       (pick, save, load, remove picture; clear on logout)
+~ activity_profile.xml       (picture + camera badge + small Remove pill)
++ dialog_photo_source.xml, ic_camera / ic_gallery / ic_trash / bg_camera_badge (new drawables/layout)
++ res/xml/file_paths.xml + FileProvider in AndroidManifest.xml (for Take Photo)
+~ ChatMember.java            (new field: photo)
+~ ChatActivity.java          (reads members' photo, publishes mine)
+~ ChatRoomsActivity.java     (adds my photo when joining a room)
+~ ChatAdapter.java + item_chat_message.xml (avatar beside other people's messages)
+
+NOTE: this is fine for small pictures. For many users / big pictures, Firebase Storage is better
+(but needs the Blaze plan on new projects). The Base64 way is free and simple.
